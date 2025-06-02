@@ -1,0 +1,62 @@
+/* components/TopPerformers.module.css */
+.topPerformersContainer {
+display: flex;
+flex-direction: column; /* 1등이 위에, 2,3,4등이 아래로 배치 */
+gap: 20px;
+padding: 20px;
+background-color: #f7f7f7;
+border-radius: 8px;
+}
+
+.topPerformerCard {
+background-color: #fff;
+border-radius: 8px;
+padding: 20px;
+display: flex;
+align-items: center;
+gap: 20px;
+}
+
+.topPerformerImage {
+width: 120px;
+height: 120px;
+border-radius: 50%;
+object-fit: cover;
+}
+
+.topPerformerInfo h3 {
+margin-top: 0;
+margin-bottom: 8px;
+font-size: 1.5rem;
+}
+
+.topPerformerInfo p {
+color: #555;
+font-size: 0.9rem;
+line-height: 1.4;
+}
+
+.restPerformersContainer {
+display: flex;
+gap: 10px;
+justify-content: space-around; /* 2,3,4등을 가로로 적절히 배치 /
+margin-top: 10px; / 1등 카드와의 간격 */
+}
+
+.restPerformerCard {
+background-color: #fff;
+border-radius: 8px;
+padding: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100px; /* 이미지 크기에 맞춰 조절 /
+height: 100px; / 이미지 크기에 맞춰 조절 */
+}
+
+.restPerformerImage {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+object-fit: cover;
+}

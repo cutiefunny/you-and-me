@@ -1,0 +1,61 @@
+/* components/FixedMenu.module.css */
+.fixedMenuContainer {
+  position: fixed; /* 상단 고정 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* 메뉴 높이 (필요에 따라 조절) */
+  background-color: #ffffff; /* 배경색 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* 하단 그림자 */
+  z-index: 1000; /* 다른 요소들 위에 오도록 */
+  display: flex;
+  justify-content: center; /* 내부 .menuContentWrapper를 중앙 정렬 */
+  padding: 0 24px; /* RootLayout의 좌우 패딩과 일치시킬 수 있음 */
+  box-sizing: border-box;
+}
+
+.menuContentWrapper {
+  width: 100%;
+  max-width: 1280px; /* RootLayout의 최대 너비와 일치시킬 수 있음 */
+  height: 100%;
+  display: flex;
+  justify-content: space-between; /* 타이틀과 아이콘을 양 끝으로 */
+  align-items: center;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit; /* 부모 요소 색상 상속 */
+}
+
+.titleText {
+  font-size: 1.4rem; /* 타이틀 폰트 크기 */
+  font-weight: bold;
+  color: #333; /* 타이틀 색상 */
+  margin: 0; /* 기본 마진 제거 */
+}
+
+.settingsIconWrapper {
+  /* 특별한 스타일이 필요 없을 수 있음 */
+}
+
+.settingsButton {
+  background: none;
+  border: none;
+  padding: 8px; /* 클릭 영역 확보 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333; /* 아이콘 색상 */
+}
+
+.settingsButton:hover {
+  opacity: 0.7;
+}
+
+/* 만약 이미지 아이콘을 사용한다면 */
+/* .settingsButton img {
+  width: 24px;
+  height: 24px;
+} */
