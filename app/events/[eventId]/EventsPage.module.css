@@ -1,0 +1,35 @@
+/* app/events/EventsPage.module.css (상세 페이지 스타일 추가) */
+/* ... (기존 그리드, 카드 스타일) ... */
+
+.eventDetailView {
+  background-color: #fff;
+  padding: 20px;
+  margin: 0 auto; /* 상세 내용 중앙 정렬 */
+  max-width: 800px; /* 상세 내용 최대 너비 */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.detailImageWrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* 또는 원본 이미지 비율에 맞게 */
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.detailTitle {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.detailDescription {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #555;
+  white-space: pre-line; /* 줄바꿈 적용 */
+}

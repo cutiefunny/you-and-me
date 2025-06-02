@@ -1,42 +1,34 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* globals.css */
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+  height: 100%; /* html과 body가 전체 높이를 차지하도록 */
   margin: 0;
+  padding: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* body에 직접 flex 레이아웃 적용 */
+.siteLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 뷰포트 전체 높이를 최소 높이로 가짐 */
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* FixedMenu와 main 컨텐츠를 묶는 wrapper (선택적) */
+/* 이 wrapper가 없어도 mainContent에 flex-grow를 주면 됩니다. */
+.siteContentWrapper {
+  flex-grow: 1; /* 이 부분이 늘어나면서 Footer를 아래로 밀어냄 */
+  display: flex; /* 내부 FixedMenu와 mainContent를 수직으로 쌓기 위해 (선택적) */
+  flex-direction: column;
 }
+
+.mainContent {
+  flex-grow: 1; /* FixedMenu를 제외한 나머지 공간을 채움 */
+  /* paddingTop은 RootLayout에서 인라인으로 설정됨 */
+  /* 여기에 페이지 공통 좌우 패딩 등을 설정할 수 있습니다. */
+  /* 예: padding-left: 24px; padding-right: 24px; */
+  padding-top : 60px; /* FixedMenu 높이만큼 여백 추가 */
+  background-color: #efe8ff;
+}
+
+/* Footer 자체의 스타일은 Footer.module.css에서 관리 */
+/* Footer 컴포넌트는 siteLayout flex 컨테이너의 마지막 아이템으로 자연스럽게 하단에 위치 */

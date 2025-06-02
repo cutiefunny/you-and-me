@@ -1,0 +1,88 @@
+/* components/ImageSlider.module.css */
+.swiperContainer {
+  width: 90%;
+  margin: 0 auto; /* 중앙 정렬 */
+  position: relative; /* 네비게이션 버튼 등의 절대 위치 기준 */
+  overflow: hidden; /* 슬라이더 모서리 둥글게 처리 시 필요할 수 있음 */
+  border-radius: 0.5rem; /* 예시: 슬라이더 전체 모서리 둥글게 (선택 사항) */
+  margin-top : 20px; /* 상단 여백 추가 */
+}
+
+.mySwiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiperSlide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee; /* 이미지 로딩 전 배경색 */
+  position: relative; /* next/image fill 사용 시 필요 */
+  overflow: hidden; /* 내부 이미지가 슬라이드를 벗어나지 않도록 */
+}
+
+/* 슬라이드 이미지를 감싸는 링크 스타일 (선택 사항) */
+.slideLink {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative; /* 내부 Image 컴포넌트 기준 */
+}
+
+/* next/image 컴포넌트는 fill prop과 style objectFit으로 제어되므로,
+   여기서는 특별한 스타일이 필요 없을 수 있습니다.
+   만약 추가 스타일이 필요하다면 Image 컴포넌트에 className을 부여하고 여기에 정의합니다.
+*/
+/* .slideImage { ... } */
+
+
+.caption {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  z-index: 10; /* 다른 Swiper UI 요소보다 위에 오도록 */
+}
+
+
+/* Swiper 네비게이션 버튼 및 페이지네이션 기본 스타일 오버라이드 (선택 사항) */
+/* Swiper의 기본 스타일은 'swiper/css/navigation' 등에서 로드되지만,
+   더 세밀하게 커스터마이징하고 싶다면 아래처럼 할 수 있습니다. */
+
+/* 예시: 네비게이션 버튼 색상 변경 */
+:global(.swiper-button-next),
+:global(.swiper-button-prev) {
+  color: #ffffff; /* 버튼 색상 */
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+:global(.swiper-button-next)::after,
+:global(.swiper-button-prev)::after {
+  font-size: 16px; /* 화살표 아이콘 크기 */
+  font-weight: bold;
+}
+:global(.swiper-button-next):hover,
+:global(.swiper-button-prev):hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+
+/* 예시: 페이지네이션 점 색상 변경 */
+:global(.swiper-pagination-bullet) {
+  background-color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+  width: 10px;
+  height: 10px;
+}
+
+:global(.swiper-pagination-bullet-active) {
+  background-color: #ffffff;
+}

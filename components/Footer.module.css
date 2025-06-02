@@ -1,0 +1,45 @@
+/* components/Footer.module.css */
+.footer {
+  background-color: #D1C4E9; /* 요청하신 보라색 파스텔톤 배경 */
+  color: #4A4A4A; /* 배경색과 대비되는 어두운 글자색 (흰색은 가독성이 낮을 수 있음) */
+  /* 또는 color: #FFFFFF; 로 하고 text-shadow를 적용할 수도 있습니다. */
+  padding: 25px 24px; /* 상하, 좌우 패딩 */
+  text-align: center;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1;
+  width: 100%; /* 부모 컨테이너(body 또는 siteLayout)에 꽉 차도록 */
+  box-sizing: border-box;
+  flex-shrink: 0; /* 내용이 많아도 푸터 크기가 줄어들지 않도록 */
+}
+
+.footer p {
+  margin: 6px 0; /* 단락 간 간격 */
+}
+
+/* 이전 Footer.js 코드에 있던 다른 클래스들 (필요시 여기에 스타일 정의) */
+/*
+.callCenter {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.phoneNumber {
+  font-weight: bold;
+}
+
+.company,
+.address {
+  font-size: 0.8rem;
+  color: #555; // 배경색에 맞춰 조절
+  line-height: 1.6;
+}
+
+.company img,
+.callCenter img {
+  width: 16px; // 아이콘 크기 예시
+  height: 16px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+*/
