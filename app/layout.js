@@ -14,11 +14,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "너랑 나",
-  description: "너나스튜디오",
-};
-
 export default function RootLayout({ children }) {
   //const menuHeight = '60px'; // FixedMenu의 높이
 
@@ -38,3 +33,39 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+export const metadata = {
+  applicationName: "너랑 나",
+  title: {
+    default: "너랑 나",
+    template: "너랑 나",
+  },
+  description: "대화가 필요한 순간, 너랑 나",
+  keywords: ["너랑 나", "You&Me", "대화", "커뮤니케이션", "전화", "메시지", "소통"],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "너랑 나",
+    // startUpImage: [],
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "너랑 나",
+    title: {
+      default: "너랑 나",
+      template: "너랑 나",
+    },
+    description: "대화가 필요한 순간, 너랑 나",
+  }
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#FFFFFF",
+};

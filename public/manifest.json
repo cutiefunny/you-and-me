@@ -1,0 +1,47 @@
+{
+    "name": "PICK",
+    "short_name": "PICK",
+    "description": "똑똑한 선택, 빠른 견적",
+    "orientation": "portrait",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff",
+    "icons": [
+      {
+        "src": "/images/icon.png",
+        "sizes": "120x120",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/icon-144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ],
+    "screenshots": [
+      {
+        "src":"/images/screenshot.png",
+        "sizes":"606x1280",
+        "type":"image/png",
+        "description":"홈 화면"
+      },
+      {
+        "src":"/images/screenshot2.png",
+        "sizes":"606x1282",
+        "type":"image/png",
+        "description":"지역 선택"
+      },
+      {
+        "src":"/images/screenshot3.png",
+        "sizes":"606x1282",
+        "type":"image/png",
+        "description":"리뷰 목록"
+      }
+    ]
+}

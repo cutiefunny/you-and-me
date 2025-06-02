@@ -56,8 +56,8 @@ const eventImages = [
       image: '/images/6women.jpg',
     },
     {
-      name: '최영희',
-      image: '/images/3women.jpg',
+      name: '최니니',
+      image: '/images/7women.jpg',
     },
     {
       name: '정영숙',

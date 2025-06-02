@@ -32,3 +32,33 @@ body {
 
 /* Footer 자체의 스타일은 Footer.module.css에서 관리 */
 /* Footer 컴포넌트는 siteLayout flex 컨테이너의 마지막 아이템으로 자연스럽게 하단에 위치 */
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #ffffff !important; /* !important는 다른 스타일에 덮어씌워지지 않도록 필요할 때만 */
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Swiper Pagination Overrides */
+.swiper-pagination-bullet {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  opacity: 1 !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #ffffff !important;
+}
