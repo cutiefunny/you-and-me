@@ -9,7 +9,7 @@ import CounselorImageModal from './CounselorImageModal'; // 모달 컴포넌트 
 // 더미 데이터 (위에서 galleryImages가 추가된 버전으로 사용)
 const dummyCounselors = [
   { id: '1', name: '김옥순', rating: 4.8, reviews: 120, image: '/images/1women.jpg',
-    galleryImages: ['/images/1women_gallery1.jpg', '/images/1women_gallery2.jpg', '/images/1women_gallery3.jpg'],
+    galleryImages: ['/images/1-1.jpg', '/images/1-2.jpg', '/images/1-3.jpg'],
     sampleAudio: '/audio/olivia_sample.mp3' },
   { id: '2', name: '박영자', rating: 4.7, reviews: 95, image: '/images/2women.jpg',
     galleryImages: ['/images/2women_gallery1.jpg', '/images/2women_gallery2.jpg', '/images/2women_gallery3.jpg'],
