@@ -1,7 +1,7 @@
 {
-    "name": "PICK",
-    "short_name": "PICK",
-    "description": "똑똑한 선택, 빠른 견적",
+    "name": "너랑나",
+    "short_name": "너랑나",
+    "description": "대화가 필요할 때",
     "orientation": "portrait",
     "start_url": "/",
     "display": "standalone",
