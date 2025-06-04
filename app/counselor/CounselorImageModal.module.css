@@ -1,0 +1,74 @@
+/* /app/counselor/CounselorImageModal.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 90vw; /* 화면 너비의 90% */
+  max-height: 90vh; /* 화면 높이의 90% */
+  overflow-y: auto;
+  position: relative;
+  text-align: center;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+.mainImageWrapper {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.mainImage {
+  max-width: 100%;
+  max-height: 60vh; /* 메인 이미지 최대 높이 */
+  border-radius: 8px;
+  object-fit: contain; /* 이미지가 잘리지 않도록 */
+}
+
+.additionalImagesContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap; /* 추가 이미지가 많을 경우 줄바꿈 */
+}
+
+.additionalImageWrapper {
+  width: 100px; /* 추가 이미지 썸네일 크기 */
+  height: 100px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.additionalImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

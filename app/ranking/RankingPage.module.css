@@ -1,0 +1,252 @@
+/* /app/ranking/RankingPage.module.css */
+.pageContainer {
+  padding: 15px; /* 전체 패딩 약간 줄임 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f0f2f5; /* 페이지 배경색 변경 */
+}
+
+/* 필터 바 스타일 */
+.filterBar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #fff; /* 필터 바 배경색 */
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.filterDropdown {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  flex-grow: 1; /* 드롭다운이 공간을 채우도록 */
+  min-width: 100px; /* 최소 너비 */
+  cursor: pointer;
+}
+
+/* 명예의 전당 섹션 */
+.hallOfFame {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.hofTitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d9534f; /* 강조 색상 */
+  margin-bottom: 8px;
+}
+
+.hofDescription {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.hofDescriptionSmall {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+/* Top 3 랭커 레이아웃 */
+.topThreeContainer {
+  display: flex;
+  justify-content: space-around; /* 공간 분배 */
+  align-items: flex-end; /* 하단 정렬 */
+  gap: 10px; /* 카드 간 간격 */
+  text-align: center;
+}
+
+.rankerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  width: calc(33.333% - 10px); /* 3개 아이템 너비, gap 고려 */
+}
+
+.rankerCardTop1 { /* 1등 카드 특별 스타일 */
+  composes: rankerCard;
+  transform: translateY(-15px); /* 살짝 위로 돌출 */
+}
+
+.rankerCardTop2, .rankerCardTop3 {
+  composes: rankerCard;
+}
+
+.profileImageWrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.profileImage {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid gold; /* 1등 테두리 예시 */
+}
+
+.profileImageTop1 {
+  composes: profileImage;
+  width: 90px; /* 1등 이미지 크게 */
+  height: 90px;
+  border-color: gold; /* 1등 강조 */
+}
+.profileImageTop2 {
+  composes: profileImage;
+  border-color: silver; /* 2등 강조 */
+}
+.profileImageTop3 {
+  composes: profileImage;
+  border-color: #cd7f32; /* 3등 강조 (bronze) */
+}
+.profileImagePlaceholder { /* 이미지 없을 때 ? 아이콘 스타일 */
+    composes: profileImage;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+    font-size: 30px;
+    color: #757575;
+}
+
+
+.rankerName {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verifiedIcon { /* 파란색 체크 아이콘 (SVG 또는 이미지 사용 권장) */
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+  color: #007bff; /* 예시 색상 */
+  /* background-image: url('/path/to/verified-icon.svg'); */
+}
+
+.rankerInfo {
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px; /* 아이콘과 텍스트 사이 */
+}
+.locationIcon { /* 위치 아이콘 (SVG 또는 이미지 사용 권장) */
+    width: 12px;
+    height: 12px;
+    /* background-image: url('/path/to/location-icon.svg'); */
+}
+
+
+.rankNumberDisplay {
+  background-color: #e9ecef;
+  padding: 8px 0; /* 세로 패딩만 */
+  width: 100%; /* 카드 너비에 맞게 */
+  border-radius: 0 0 6px 6px; /* 카드 하단과 맞춤 */
+  font-size: 18px;
+  font-weight: bold;
+  color: #495057;
+  margin-top: 10px; /* 이름/정보와의 간격 */
+}
+.rankNumberDisplayTop1 {
+    composes: rankNumberDisplay;
+    background-color: gold;
+    color: #fff;
+}
+.rankNumberDisplayTop2 {
+    composes: rankNumberDisplay;
+    background-color: silver;
+    color: #fff;
+}
+.rankNumberDisplayTop3 {
+    composes: rankNumberDisplay;
+    background-color: #cd7f32; /* bronze */
+    color: #fff;
+}
+
+
+/* 일반 랭킹 리스트 (4위 이하) */
+.generalRankingList {
+  display: grid;
+  /* grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); */ /* 기존 반응형 그리드 주석 처리 */
+  grid-template-columns: repeat(3, 1fr); /* 3개의 동일한 너비의 컬럼으로 변경 */
+  gap: 1px;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.generalRankerItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.generalRankNumber {
+  font-size: 13px;
+  font-weight: bold;
+  color: #777;
+  margin-bottom: 8px; /* 이미지와의 간격 */
+}
+
+.generalProfileImage {
+  composes: profileImage; /* Top3와 동일한 이미지 스타일 상속 */
+  width: 60px; /* 일반 랭커 이미지 크기 */
+  height: 60px;
+  border-width: 2px; /* 테두리 두께 일관성 */
+  border-color: #ddd; /* 일반 테두리 색상 */
+}
+.generalProfileImagePlaceholder {
+    composes: profileImagePlaceholder;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+}
+
+
+/* 로딩, 에러, 빈 데이터 메시지 스타일 */
+.loadingText,
+.emptyText {
+  padding: 50px;
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+}
+
+.errorText {
+  color: red;
+  text-align: center;
+  padding: 10px;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+/* 아이콘 플레이스홀더 (실제 SVG/이미지로 대체 권장) */
+.iconPlaceholder {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor; /* 아이콘 색상 상속 */
+  margin-right: 4px;
+  opacity: 0.6;
+}

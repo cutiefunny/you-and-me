@@ -6,6 +6,7 @@
   overflow: hidden; /* 슬라이더 모서리 둥글게 처리 시 필요할 수 있음 */
   border-radius: 0.5rem; /* 예시: 슬라이더 전체 모서리 둥글게 (선택 사항) */
   margin-top : 20px; /* 상단 여백 추가 */
+  max-width: 600px;
 }
 
 .mySwiper {

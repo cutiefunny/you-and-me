@@ -1,0 +1,134 @@
+/* /app/counselor/CounselorPage.module.css */
+.pageContainer {
+  max-width: 400px; /* 모바일 화면과 유사한 최대 너비 */
+  margin: 0 auto;
+  padding: 20px 15px 80px 15px; /* 하단 Call 버튼 공간 확보 */
+  background-color: #efe8ff; /* 이미지의 배경색과 유사하게 */
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  text-align: left; /* 이미지에서는 약간 좌측 정렬 */
+  margin-bottom: 30px;
+}
+
+.counselorList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* 각 상담사 아이템 사이 간격 */
+}
+
+.counselorItem {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.counselorItemSelected {
+  composes: counselorItem;
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #d227fd;
+}
+
+.profileImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.infoContainer {
+  flex-grow: 1;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.ratingContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.starIcon {
+  color: #f5a623; /* 별 색상 */
+}
+
+.reviews {
+  color: #777;
+}
+
+.sampleButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.playIconWrapper {
+  background-color: #f0f0f0; /* 아이콘 배경 */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.playIcon { /* 간단한 삼각형 아이콘 (SVG나 이미지로 대체 권장) */
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid #555; /* 아이콘 색상 */
+  margin-left: 2px; /* 중앙 정렬 보정 */
+}
+
+.sampleText {
+  font-size: 12px;
+  color: #777;
+}
+
+.callButton {
+  position: fixed; /* 화면 하단 고정 */
+  bottom: 20px; /* 하단 여백 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px); /* 양쪽 여백 20px씩 고려 */
+  max-width: 360px; /* pageContainer의 max-width에 맞춤 (padding 고려) */
+  padding: 15px;
+  background-color: #d227fd; /* 이미지의 버튼 색상과 유사하게 */
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px; /* 둥근 버튼 */
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(255, 140, 97, 0.4);
+  transition: background-color 0.2s;
+}
+
+.callButton:disabled {
+  background-color: #e06dfd; /* 비활성화 시 색상 */
+  cursor: not-allowed;
+  box-shadow: none;
+}

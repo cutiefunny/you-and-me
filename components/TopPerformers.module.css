@@ -6,6 +6,8 @@ gap: 20px;
 padding: 20px;
 background-color: #efe8ff;
 border-radius: 8px;
+max-width: 600px; /* 최대 너비 설정 */
+margin: 0 auto; /* 중앙 정렬 */
 }
 
 .topPerformerCard {
@@ -40,6 +42,7 @@ line-height: 1.4;
 display: flex;
 gap: 10px;
 justify-content: space-around; /* 2,3,4등을 가로로 적절히 배치 /
+width: 100%;
 margin-top: 10px; / 1등 카드와의 간격 */
 }
 
