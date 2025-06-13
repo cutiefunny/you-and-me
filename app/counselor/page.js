@@ -1,13 +1,12 @@
 // /app/counselor/page.jsx
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import styles from './CounselorPage.module.css';
 import CounselorImageModal from './CounselorImageModal';
 import { db, auth } from '@/lib/firebase/clientApp';
-import { doc, setDoc, collection, serverTimestamp, updateDoc, onSnapshot } from 'firebase/firestore'; // updateDoc, onSnapshot 추가
-
+import { doc, setDoc, collection, serverTimestamp, updateDoc, onSnapshot } from 'firebase/firestore';
 
 // 더미 데이터 (위에서 galleryImages가 추가된 버전으로 사용)
 const dummyCounselors = [
@@ -33,8 +32,6 @@ const dummyCounselors = [
     galleryImages: ['/images/4women_gallery1.jpg', '/images/4women_gallery2.jpg', '/images/4women_gallery3.jpg'],
     sampleAudio: '/audio/sophia_sample.mp3' },
 ];
-
-
 const StarIcon = () => <span className={styles.starIcon}>★</span>;
 const PlayIcon = () => <div className={styles.playIcon}></div>;
 
@@ -43,13 +40,11 @@ export default function CounselorPage() {
   const [selectedCounselorId, setSelectedCounselorId] = useState(null);
   const [loading, setLoading] = useState(true);
   
-  // [추가] 통화 관련 상태
   const [isCalling, setIsCalling] = useState(false);
   const [agoraClient, setAgoraClient] = useState(null);
   const [localAudioTrack, setLocalAudioTrack] = useState(null);
-  const [currentCallId, setCurrentCallId] = useState(null); // [추가] 현재 통화 문서 ID 저장
+  const [currentCallId, setCurrentCallId] = useState(null);
 
-  // 모달 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ mainImageSrc: '', additionalImages: [], counselorName: '' });
 
@@ -59,48 +54,39 @@ export default function CounselorPage() {
     setLoading(false);
   }, []);
 
-  const handleCounselorSelect = (id) => {
-    setSelectedCounselorId(prevId => (prevId === id ? null : id));
-  };
-
-  const handlePlaySample = (e, sampleAudioUrl) => {
-    e.stopPropagation();
-    alert(`Play sample: ${sampleAudioUrl}`);
-    // TODO: 실제 오디오 재생 로직 구현
-  };
-
-  // ==================== [추가] 통화 상태 실시간 감지 ====================
+  // 통화 상태 실시간 감지
   useEffect(() => {
-    // currentCallId가 있을 때만 (즉, 통화가 시작되었을 때만) 리스너를 설정합니다.
     if (!currentCallId) return;
 
     const callDocRef = doc(db, 'calls', currentCallId);
     
-    // onSnapshot을 사용하여 해당 문서의 변경사항을 실시간으로 감지합니다.
     const unsubscribe = onSnapshot(callDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const callData = docSnap.data();
         const status = callData.status;
 
         console.log('통화 상태 변경 감지:', status);
-
-        // 상담사가 전화를 거절했거나, 통화를 완료(종료)한 경우
+        
+        // [수정] 상담사가 전화를 거절했거나, 통화를 완료(종료)한 경우
         if (status === 'declined' || status === 'completed' || status === 'failed') {
-          // 이미 통화 종료 로직이 실행 중이 아니라면 실행
-          if (isCalling) {
-            alert("상대방에 의해 통화가 종료되었습니다.");
-            handleHangUp();
-          }
+          // alert를 제거하고 handleHangUp에 메시지를 전달하여 호출
+          handleHangUp("상대방에 의해 통화가 종료되었습니다.");
         }
       }
     });
 
-    // 컴포넌트가 언마운트되거나 currentCallId가 변경될 때 리스너를 정리합니다.
     return () => unsubscribe();
 
-  }, [currentCallId, isCalling]); // isCalling을 의존성에 추가하여 중복 호출 방지
-  // =====================================================================
+  }, [currentCallId]); // isCalling 의존성 제거
 
+
+  const handleCounselorSelect = (id) => { 
+    setSelectedCounselorId(prevId => (prevId === id ? null : id));
+  };
+  const handlePlaySample = (e, sampleAudioUrl) => { 
+    e.stopPropagation();
+    alert(`Play sample: ${sampleAudioUrl}`);
+  };
 
   const handleCall = async () => {
     if (!selectedCounselorId) {
@@ -148,9 +134,10 @@ export default function CounselorPage() {
         }
       });
       
+      // [수정] Agora 이벤트에서는 콘솔 로그만 남기고 handleHangUp을 호출하여 로직을 일원화
       client.on('user-unpublished', (user) => {
-        console.log('상담사가 통화를 종료했습니다.');
-        handleHangUp();
+        console.log('상담사가 통화를 종료했습니다. (Agora 이벤트)');
+        handleHangUp("상대방과의 연결이 끊어졌습니다.");
       });
 
       await client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, channelName, token, uid);
@@ -167,14 +154,23 @@ export default function CounselorPage() {
       if (callDocId) {
         await updateDoc(doc(db, 'calls', callDocId), { status: 'failed' });
       }
-      setIsCalling(false);
+      setIsCalling(false); // 실패 시 isCalling 상태를 false로 되돌림
     }
   };
 
-const handleHangUp = async () => {
-    if (!isCalling && !agoraClient) return;
+  // [수정] 통화 종료 로직 통합 및 중복 호출 방지
+  const handleHangUp = useCallback(async (reason) => {
+    // isCalling 상태를 직접 참조하는 대신, 함수 호출 시점의 상태를 확인합니다.
+    // 이렇게 하면 여러 비동기 이벤트에서 상태가 늦게 업데이트되어도 중복 실행되는 것을 방지합니다.
+    if (agoraClient?.connectionState !== 'CONNECTED' && !localAudioTrack) {
+        // 이미 연결이 끊겼거나 정리된 상태이면 아무것도 하지 않음
+        return;
+    }
 
-    console.log("통화 종료 로직을 실행합니다.");
+    const alertMessage = reason || "통화가 종료되었습니다.";
+    
+    console.log("통화 종료 로직을 실행합니다. 이유:", reason || "사용자 요청");
+    
     try {
         if (localAudioTrack) {
           localAudioTrack.stop();
@@ -194,33 +190,24 @@ const handleHangUp = async () => {
         setAgoraClient(null);
         setIsCalling(false);
         setCurrentCallId(null);
-        alert("통화가 종료되었습니다.");
+        alert(alertMessage);
     }
-  };
+  }, [agoraClient, localAudioTrack, currentCallId]); // 필요한 의존성 추가
 
-  // 이미지 클릭 시 모달 열기 핸들러
-  const openImageModal = (counselor) => {
+  const openImageModal = (counselor) => { 
     setModalContent({
-      mainImageSrc: counselor.image || '/images/default_profile.png',
-      additionalImages: counselor.galleryImages || [],
-      counselorName: counselor.name
+        mainImageSrc: counselor.image || '/images/default_profile.png',
+        additionalImages: counselor.galleryImages || [],
+        counselorName: counselor.name
     });
     setIsModalOpen(true);
   };
+  const closeImageModal = () => { setIsModalOpen(false); };
 
-  const closeImageModal = () => {
-    setIsModalOpen(false);
-  };
-
-
-  if (loading) {
-    return <div className={styles.pageContainer}><p style={{textAlign: 'center', marginTop: '50px'}}>상담사 목록을 불러오는 중...</p></div>;
-  }
+  if (loading) { return <div className={styles.pageContainer}><p style={{textAlign: 'center', marginTop: '50px'}}>상담사 목록을 불러오는 중...</p></div>; }
 
   return (
     <div className={styles.pageContainer}>
-      {/* <h1 className={styles.title}>상담사를 선택하세요</h1> */}
-
       <div className={styles.counselorList}>
         {counselors.map((counselor) => (
           <div
@@ -231,7 +218,6 @@ const handleHangUp = async () => {
             tabIndex={0}
             onKeyPress={(e) => e.key === 'Enter' && handleCounselorSelect(counselor.id)}
           >
-            {/* 이미지 클릭 시 모달 열도록 수정 */}
             <div onClick={(e) => { e.stopPropagation(); openImageModal(counselor); }} style={{cursor: 'pointer'}}>
               <Image
                 src={counselor.image || '/images/default_profile.png'}
@@ -261,11 +247,11 @@ const handleHangUp = async () => {
       {isCalling ? (
       <button 
         className={`${styles.callButton} ${styles.hangUpButton}`} 
-        onClick={handleHangUp}
+        onClick={() => handleHangUp()} // 명시적으로 인자 없이 호출
       >
         통화 종료
       </button>
-    ) : (
+      ) : (
       <button 
         className={styles.callButton} 
         onClick={handleCall}
@@ -273,9 +259,8 @@ const handleHangUp = async () => {
       >
         통화하기
       </button>
-    )}
+      )}
 
-      {/* 모달 컴포넌트 렌더링 */}
       <CounselorImageModal
         isOpen={isModalOpen}
         onClose={closeImageModal}
