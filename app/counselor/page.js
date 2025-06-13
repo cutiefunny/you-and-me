@@ -4,9 +4,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './CounselorPage.module.css';
-import CounselorImageModal from './CounselorImageModal'; // 모달 컴포넌트 임포트 (경로 확인)
-import { db, auth } from '@/lib/firebase/clientApp'; // auth도 예시를 위해 추가
-import { doc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
+import CounselorImageModal from './CounselorImageModal';
+import { db, auth } from '@/lib/firebase/clientApp';
+import { doc, setDoc, collection, serverTimestamp, updateDoc, onSnapshot } from 'firebase/firestore'; // updateDoc, onSnapshot 추가
+
 
 // 더미 데이터 (위에서 galleryImages가 추가된 버전으로 사용)
 const dummyCounselors = [
@@ -75,49 +76,43 @@ export default function CounselorPage() {
     
     setIsCalling(true); // UI를 '통화 중' 상태로 변경
 
+    let callDocId = '';
+
     try {
-
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      const selected = dummyCounselors.find(c => c.id === selectedCounselorId);
+      const channelName = `call_${selected.id}_${Date.now()}`;
+      const uid = Math.floor(Math.random() * 100000);
 
-      const selected = counselors.find(c => c.id === selectedCounselorId);
-      const channelName = `call_${Date.now()}`; // 고유한 채널 이름 생성
-      const uid = Math.floor(Math.random() * 100000); // 임시 사용자 ID
-
-      // 1. 우리 서버로부터 토큰 발급받기
-      const tokenRes = await fetch('/api/agora-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channelName, uid }),
-      });
+      const tokenRes = await fetch('/api/agora-token', { /* ... */ });
       const { token } = await tokenRes.json();
 
-      const callDocRef = doc(collection(db, "calls")); // 'calls' 컬렉션에 새 문서 생성
+      const callDocRef = doc(collection(db, "calls"));
+      callDocId = callDocRef.id; // 문서 ID 저장
+      setCurrentCallId(callDocId); // 상태에도 저장
+
       await setDoc(callDocRef, {
-          callerId: "temp", //auth.currentUser.uid, // 현재 로그인한 사용자 ID
-          counselorId: selected.id,       // 통화할 상담사 ID
+          callerId: "test_user_id",
+          counselorId: selected.id,       
           channelName: channelName,
-          agoraToken: token,              // 상담사가 참여할 때 사용할 토큰
-          status: 'ringing',              // 현재 상태: '전화 거는 중'
+          agoraToken: token,              
+          status: 'ringing',              
           createdAt: serverTimestamp(),
       });
-
-      // 2. Agora 클라이언트 생성 및 초기화
+      
       const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
       setAgoraClient(client);
 
-      // 3. 원격 사용자 오디오 수신 처리
-      client.on('user-published', async (user, mediaType) => {
-        await client.subscribe(user, mediaType);
-        if (mediaType === 'audio') {
-          user.audioTrack.play(); // 상대방 오디오 재생
-        }
+      client.on('user-published', async (user, mediaType) => { /* ... */ });
+      
+      // [추가] 상담사가 통화를 종료하면 발생하는 이벤트
+      client.on('user-unpublished', (user) => {
+        console.log('상담사가 통화를 종료했습니다.');
+        handleHangUp();
       });
-      client.on('user-unpublished', user => { /* 상대방이 나갔을 때 처리 */ });
 
-      // 4. 채널에 참여 (Join)
       await client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, channelName, token, uid);
-
-      // 5. 내 마이크 오디오 트랙 생성 및 발행 (Publish)
+      
       const track = await AgoraRTC.createMicrophoneAudioTrack();
       setLocalAudioTrack(track);
       await client.publish(track);
@@ -127,23 +122,39 @@ export default function CounselorPage() {
     } catch (error) {
       console.error("Agora call failed:", error);
       alert("통화 연결에 실패했습니다.");
-      setIsCalling(false); // 실패 시 상태 원복
+      if (callDocId) { // 통화 연결 실패 시에도 문서 상태 변경
+        await updateDoc(doc(db, 'calls', callDocId), { status: 'failed' });
+      }
+      setIsCalling(false);
     }
 };
 
 const handleHangUp = async () => {
-    if (localAudioTrack) {
-      localAudioTrack.stop();
-      localAudioTrack.close();
+    if (!isCalling && !agoraClient) return;
+
+    console.log("통화 종료 로직을 실행합니다.");
+    try {
+        if (localAudioTrack) {
+          localAudioTrack.stop();
+          localAudioTrack.close();
+        }
+        if (agoraClient) {
+          await agoraClient.leave();
+        }
+        if (currentCallId) {
+            const callDocRef = doc(db, 'calls', currentCallId);
+            await updateDoc(callDocRef, { status: 'completed' });
+        }
+    } catch (error) {
+        console.error("통화 종료 처리 중 오류:", error);
+    } finally {
+        setLocalAudioTrack(null);
+        setAgoraClient(null);
+        setIsCalling(false);
+        setCurrentCallId(null);
+        alert("통화가 종료되었습니다.");
     }
-    if (agoraClient) {
-      await agoraClient.leave();
-    }
-    setLocalAudioTrack(null);
-    setAgoraClient(null);
-    setIsCalling(false);
-    alert("통화가 종료되었습니다.");
-};
+  };
 
   // 이미지 클릭 시 모달 열기 핸들러
   const openImageModal = (counselor) => {
