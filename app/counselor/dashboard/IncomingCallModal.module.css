@@ -1,0 +1,74 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1300;
+}
+
+.dialog {
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 340px;
+}
+
+.callerInfo {
+  margin-bottom: 24px;
+}
+
+.callingText {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.callerName {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #212529;
+  margin: 8px 0 0 0;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.declineButton {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.declineButton:hover {
+  background-color: #f1b0b7;
+}
+
+.acceptButton {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.acceptButton:hover {
+  background-color: #b1dfbb;
+}
