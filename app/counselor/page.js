@@ -44,9 +44,10 @@ export default function CounselorPage() {
   const [loading, setLoading] = useState(true);
   
   // [추가] 통화 관련 상태
-  const [isCalling, setIsCalling] = useState(false); // 현재 통화 중인지 여부
-  const [agoraClient, setAgoraClient] = useState(null); // Agora 클라이언트 객체
-  const [localAudioTrack, setLocalAudioTrack] = useState(null); // 내 마이크 오디오
+  const [isCalling, setIsCalling] = useState(false);
+  const [agoraClient, setAgoraClient] = useState(null);
+  const [localAudioTrack, setLocalAudioTrack] = useState(null);
+  const [currentCallId, setCurrentCallId] = useState(null); // [추가] 현재 통화 문서 ID 저장
 
   // 모달 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,7 +85,11 @@ export default function CounselorPage() {
       const channelName = `call_${selected.id}_${Date.now()}`;
       const uid = Math.floor(Math.random() * 100000);
 
-      const tokenRes = await fetch('/api/agora-token', { /* ... */ });
+      const tokenRes = await fetch('/api/agora-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelName, uid }),
+      });
       const { token } = await tokenRes.json();
 
       const callDocRef = doc(collection(db, "calls"));
