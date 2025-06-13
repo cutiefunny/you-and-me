@@ -69,18 +69,51 @@ export default function CounselorPage() {
     // TODO: 실제 오디오 재생 로직 구현
   };
 
+  // ==================== [추가] 통화 상태 실시간 감지 ====================
+  useEffect(() => {
+    // currentCallId가 있을 때만 (즉, 통화가 시작되었을 때만) 리스너를 설정합니다.
+    if (!currentCallId) return;
+
+    const callDocRef = doc(db, 'calls', currentCallId);
+    
+    // onSnapshot을 사용하여 해당 문서의 변경사항을 실시간으로 감지합니다.
+    const unsubscribe = onSnapshot(callDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const callData = docSnap.data();
+        const status = callData.status;
+
+        console.log('통화 상태 변경 감지:', status);
+
+        // 상담사가 전화를 거절했거나, 통화를 완료(종료)한 경우
+        if (status === 'declined' || status === 'completed' || status === 'failed') {
+          // 이미 통화 종료 로직이 실행 중이 아니라면 실행
+          if (isCalling) {
+            alert("상대방에 의해 통화가 종료되었습니다.");
+            handleHangUp();
+          }
+        }
+      }
+    });
+
+    // 컴포넌트가 언마운트되거나 currentCallId가 변경될 때 리스너를 정리합니다.
+    return () => unsubscribe();
+
+  }, [currentCallId, isCalling]); // isCalling을 의존성에 추가하여 중복 호출 방지
+  // =====================================================================
+
+
   const handleCall = async () => {
     if (!selectedCounselorId) {
-      alert("먼저 상담사를 선택해주세요.");
-      return;
+        alert("먼저 상담사를 선택해주세요.");
+        return;
     }
     
-    setIsCalling(true); // UI를 '통화 중' 상태로 변경
-
+    setIsCalling(true);
     let callDocId = '';
 
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+
       const selected = dummyCounselors.find(c => c.id === selectedCounselorId);
       const channelName = `call_${selected.id}_${Date.now()}`;
       const uid = Math.floor(Math.random() * 100000);
@@ -93,8 +126,8 @@ export default function CounselorPage() {
       const { token } = await tokenRes.json();
 
       const callDocRef = doc(collection(db, "calls"));
-      callDocId = callDocRef.id; // 문서 ID 저장
-      setCurrentCallId(callDocId); // 상태에도 저장
+      callDocId = callDocRef.id;
+      setCurrentCallId(callDocId);
 
       await setDoc(callDocRef, {
           callerId: "test_user_id",
@@ -108,9 +141,13 @@ export default function CounselorPage() {
       const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
       setAgoraClient(client);
 
-      client.on('user-published', async (user, mediaType) => { /* ... */ });
+      client.on('user-published', async (user, mediaType) => {
+        await client.subscribe(user, mediaType);
+        if (mediaType === 'audio') {
+          user.audioTrack.play();
+        }
+      });
       
-      // [추가] 상담사가 통화를 종료하면 발생하는 이벤트
       client.on('user-unpublished', (user) => {
         console.log('상담사가 통화를 종료했습니다.');
         handleHangUp();
@@ -127,12 +164,12 @@ export default function CounselorPage() {
     } catch (error) {
       console.error("Agora call failed:", error);
       alert("통화 연결에 실패했습니다.");
-      if (callDocId) { // 통화 연결 실패 시에도 문서 상태 변경
+      if (callDocId) {
         await updateDoc(doc(db, 'calls', callDocId), { status: 'failed' });
       }
       setIsCalling(false);
     }
-};
+  };
 
 const handleHangUp = async () => {
     if (!isCalling && !agoraClient) return;
