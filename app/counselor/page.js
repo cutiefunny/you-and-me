@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './CounselorPage.module.css';
 import CounselorImageModal from './CounselorImageModal'; // 모달 컴포넌트 임포트 (경로 확인)
+import { db, auth } from '@/lib/firebase/clientApp'; // auth도 예시를 위해 추가
+import { doc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 
 // 더미 데이터 (위에서 galleryImages가 추가된 버전으로 사용)
 const dummyCounselors = [
@@ -91,7 +93,7 @@ export default function CounselorPage() {
 
       const callDocRef = doc(collection(db, "calls")); // 'calls' 컬렉션에 새 문서 생성
       await setDoc(callDocRef, {
-          callerId: auth.currentUser.uid, // 현재 로그인한 사용자 ID
+          callerId: "temp", //auth.currentUser.uid, // 현재 로그인한 사용자 ID
           counselorId: selected.id,       // 통화할 상담사 ID
           channelName: channelName,
           agoraToken: token,              // 상담사가 참여할 때 사용할 토큰
