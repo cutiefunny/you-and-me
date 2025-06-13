@@ -89,6 +89,16 @@ export default function CounselorPage() {
       });
       const { token } = await tokenRes.json();
 
+      const callDocRef = doc(collection(db, "calls")); // 'calls' 컬렉션에 새 문서 생성
+      await setDoc(callDocRef, {
+          callerId: auth.currentUser.uid, // 현재 로그인한 사용자 ID
+          counselorId: selected.id,       // 통화할 상담사 ID
+          channelName: channelName,
+          agoraToken: token,              // 상담사가 참여할 때 사용할 토큰
+          status: 'ringing',              // 현재 상태: '전화 거는 중'
+          createdAt: serverTimestamp(),
+      });
+
       // 2. Agora 클라이언트 생성 및 초기화
       const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
       setAgoraClient(client);
