@@ -39,6 +39,11 @@ export default function CounselorPage() {
   const [counselors, setCounselors] = useState([]);
   const [selectedCounselorId, setSelectedCounselorId] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // [추가] 통화 관련 상태
+  const [isCalling, setIsCalling] = useState(false); // 현재 통화 중인지 여부
+  const [agoraClient, setAgoraClient] = useState(null); // Agora 클라이언트 객체
+  const [localAudioTrack, setLocalAudioTrack] = useState(null); // 내 마이크 오디오
 
   // 모달 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,15 +65,73 @@ export default function CounselorPage() {
     // TODO: 실제 오디오 재생 로직 구현
   };
 
-  const handleCall = () => {
-    if (selectedCounselorId) {
-      const selected = counselors.find(c => c.id === selectedCounselorId);
-      alert(`Calling ${selected?.name}...`);
-      // TODO: 실제 통화 연결 로직 구현
-    } else {
+  const handleCall = async () => {
+    if (!selectedCounselorId) {
       alert("먼저 상담사를 선택해주세요.");
+      return;
     }
-  };
+    
+    setIsCalling(true); // UI를 '통화 중' 상태로 변경
+
+    try {
+
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+
+      const selected = counselors.find(c => c.id === selectedCounselorId);
+      const channelName = `call_${Date.now()}`; // 고유한 채널 이름 생성
+      const uid = Math.floor(Math.random() * 100000); // 임시 사용자 ID
+
+      // 1. 우리 서버로부터 토큰 발급받기
+      const tokenRes = await fetch('/api/agora-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelName, uid }),
+      });
+      const { token } = await tokenRes.json();
+
+      // 2. Agora 클라이언트 생성 및 초기화
+      const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+      setAgoraClient(client);
+
+      // 3. 원격 사용자 오디오 수신 처리
+      client.on('user-published', async (user, mediaType) => {
+        await client.subscribe(user, mediaType);
+        if (mediaType === 'audio') {
+          user.audioTrack.play(); // 상대방 오디오 재생
+        }
+      });
+      client.on('user-unpublished', user => { /* 상대방이 나갔을 때 처리 */ });
+
+      // 4. 채널에 참여 (Join)
+      await client.join(process.env.NEXT_PUBLIC_AGORA_APP_ID, channelName, token, uid);
+
+      // 5. 내 마이크 오디오 트랙 생성 및 발행 (Publish)
+      const track = await AgoraRTC.createMicrophoneAudioTrack();
+      setLocalAudioTrack(track);
+      await client.publish(track);
+
+      alert(`${selected.name}님과 통화를 시작합니다...`);
+
+    } catch (error) {
+      console.error("Agora call failed:", error);
+      alert("통화 연결에 실패했습니다.");
+      setIsCalling(false); // 실패 시 상태 원복
+    }
+};
+
+const handleHangUp = async () => {
+    if (localAudioTrack) {
+      localAudioTrack.stop();
+      localAudioTrack.close();
+    }
+    if (agoraClient) {
+      await agoraClient.leave();
+    }
+    setLocalAudioTrack(null);
+    setAgoraClient(null);
+    setIsCalling(false);
+    alert("통화가 종료되었습니다.");
+};
 
   // 이미지 클릭 시 모달 열기 핸들러
   const openImageModal = (counselor) => {
@@ -130,13 +193,22 @@ export default function CounselorPage() {
         ))}
       </div>
 
+      {isCalling ? (
+      <button 
+        className={`${styles.callButton} ${styles.hangUpButton}`} 
+        onClick={handleHangUp}
+      >
+        통화 종료
+      </button>
+    ) : (
       <button 
         className={styles.callButton} 
         onClick={handleCall}
         disabled={!selectedCounselorId}
       >
-        Call
+        통화하기
       </button>
+    )}
 
       {/* 모달 컴포넌트 렌더링 */}
       <CounselorImageModal
