@@ -1,7 +1,7 @@
 // /app/survey/page.js
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // useRef 임포트
 import styles from './SurveyPage.module.css'; // CSS 모듈 임포트
 import Image from 'next/image'; // next/image 사용을 위해 임포트
 import { db } from '@/lib/firebase/clientApp'; // Firebase db 인스턴스 임포트
@@ -47,12 +47,22 @@ export default function SurveyPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
 
+  // 이름 입력 필드에 포커스를 주기 위한 useRef
+  const nameInputRef = useRef(null); 
+
   // useSmsMessage 훅 사용
   const { sendSmsMessage, loading: smsLoading, error: smsError } = useSmsMessage();
 
   useEffect(() => {
     setQuestions(generateQuestions());
   }, []);
+
+  // showConsultForm이 true가 되고 nameInputRef가 존재할 때 포커스 설정
+  useEffect(() => {
+    if (showConsultForm && nameInputRef.current) {
+      nameInputRef.current.focus();
+    }
+  }, [showConsultForm]); // showConsultForm 상태가 변경될 때마다 이펙트 실행
 
   const handleChange = (e) => {
     setAnswers({
@@ -234,7 +244,7 @@ export default function SurveyPage() {
           <button 
             id="consultButton" 
             className={styles.consultButton}
-            onClick={() => setShowConsultForm(true)}
+            onClick={() => setShowConsultForm(true)} // onClick 시 폼 표시
           >
             예쁜 상담사에게 상담받기 →
           </button>
@@ -251,6 +261,7 @@ export default function SurveyPage() {
             className={styles.inputField} 
             value={name}
             onChange={(e) => setName(e.target.value)}
+            ref={nameInputRef} // 이름 입력 필드에 ref 연결
           />
           <input 
             type="text" 
