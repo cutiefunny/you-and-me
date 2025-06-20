@@ -1,0 +1,210 @@
+/* app/survey/SurveyPage.module.css */
+
+.pageContainer {
+  background-color: #111;
+  color: #fff;
+  font-family: sans-serif;
+  padding: 20px;
+  max-width: 600px; /* 적절한 최대 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
+  min-height: 100vh; /* 최소 높이 */
+}
+
+.title {
+  color: hotpink;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.question {
+  margin-bottom: 20px;
+  background-color: #222;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.question p {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.scale {
+  display: flex;
+  gap: 15px; /* 라벨 간 간격 */
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.scale label {
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* 라디오 버튼과 텍스트 사이 간격 */
+}
+
+.scale input[type="radio"] {
+  transform: scale(1.2); /* 라디오 버튼 크기 조정 */
+  margin: 0; /* 기본 마진 제거 */
+  accent-color: hotpink; /* 선택된 라디오 버튼 색상 (일부 브라우저에서 지원) */
+}
+
+.submitButton {
+  background: #ff69b4;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 100%; /* 버튼 너비 100% */
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+  transition: background-color 0.2s ease;
+}
+
+.submitButton:hover {
+  background-color: #e05cb3;
+}
+
+.resultArea {
+  margin-top: 40px;
+  background: #222;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.resultTitle {
+  color: hotpink;
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.resultEntry {
+  margin-bottom: 15px;
+}
+
+.resultEntry strong {
+  display: block; /* 카테고리를 한 줄로 */
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.bar {
+  height: 20px;
+  background: linear-gradient(to right, hotpink, #8a2be2); /* 그라데이션 적용 */
+  border-radius: 10px;
+  transition: width 0.5s ease-out; /* 너비 변화에 애니메이션 */
+}
+
+.partnerRecommendation {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #444;
+  padding-top: 20px;
+}
+
+.partnerTitle {
+  color: hotpink;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.partnerText {
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.partnerImageWrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 66.66%; /* 3:2 비율 (200/300) */
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.partnerImage {
+  border-radius: 8px;
+  object-fit: cover; /* 이미지가 잘리지 않도록 */
+}
+
+.consultButton {
+  background: #ff69b4;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease;
+}
+
+.consultButton:hover {
+  background-color: #e05cb3;
+}
+
+.consultForm {
+  background: #222;
+  padding: 25px;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.consultFormTitle {
+  color: hotpink;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.consultFormDescription {
+  font-size: 15px;
+  color: #ccc;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.inputField {
+  width: calc(100% - 20px); /* 패딩 고려 */
+  padding: 10px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px;
+}
+
+.inputField::placeholder {
+  color: #aaa;
+}
+
+.submitConsultButton {
+  background: #ff69b4;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease;
+}
+
+.submitConsultButton:hover {
+  background-color: #e05cb3;
+}
