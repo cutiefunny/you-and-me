@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 // 수신자 번호 (상담사 번호)를 환경 변수에서 가져옵니다.
 // 이 변수는 .env.local 파일에 설정되어야 합니다. (예: NEXT_PUBLIC_RECEIVER_PHONE_NUMBER="010-XXXX-YYYY")
-const RECEIVER_PHONE_NUMBER = process.env.NEXT_PUBLIC_RECEIVER_PHONE_NUMBER;
+const RECEIVER_PHONE_NUMBER = "";
 
 export default function useSmsMessage() {
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export default function useSmsMessage() {
    * @param {string} params.phone - 신청자 전화번호 ('-' 포함 또는 미포함)
    * @param {object} params.scoresMap - 설문조사 결과의 성향별 점수 맵 (예: { "도미넌트": 150, "서브": 120, ... })
    */
-  const sendSmsMessage = async ({ name, phone, scoresMap }) => {
+  const sendSmsMessage = async ({ name, phone, scoresMap, documentId }) => {
     setLoading(true);
     setError(null);
     setData(null);
@@ -41,7 +41,7 @@ export default function useSmsMessage() {
     const messageContent = 
       `[너랑나 상담 신청]\n` +
       `신청자: ${name} (${phone})\n` +
-      `결과링크: [링크]\n`;
+      `https://you-and-me-three.vercel.app/survey/${documentId}\n`;
 
     try {
       const response = await fetch('/api/send-sms-message', {

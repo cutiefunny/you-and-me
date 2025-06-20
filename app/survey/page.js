@@ -5,7 +5,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './SurveyPage.module.css'; // CSS 모듈 임포트
 import Image from 'next/image'; // next/image 사용을 위해 임포트
 import { db } from '@/lib/firebase/clientApp'; // Firebase db 인스턴스 임포트
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+// [수정] Firestore 쿼리 및 업데이트를 위한 모듈 임포트
+import { collection, addDoc, serverTimestamp, query, where, getDocs, updateDoc, doc } from 'firebase/firestore'; 
 import useSmsMessage from '@/hooks/useSmsMessage'; // useSmsMessage 훅 임포트
 
 const categories = [
@@ -108,18 +109,39 @@ export default function SurveyPage() {
     }
 
     try {
-      // 1. Firebase Firestore에 데이터 저장
-      await addDoc(collection(db, "survey"), {
+      // 1. Firebase Firestore에 데이터 저장 또는 업데이트
+      const surveyCollectionRef = collection(db, "survey");
+      // name과 phone이 일치하는 문서가 있는지 쿼리
+      const q = query(surveyCollectionRef, where("name", "==", name), where("phone", "==", phone));
+      const querySnapshot = await getDocs(q);
+
+      let finalDocId = null; // 최종적으로 저장될/업데이트될 문서의 ID
+
+      const dataToSave = {
         name: name,
         phone: phone,
         email: email,
         result: scoresMap, // scoresMap (테스트 결과) 저장
         timestamp: serverTimestamp() // 제출 시간 기록
-      });
+      };
+
+      if (!querySnapshot.empty) {
+        // 이미 존재하는 문서가 있다면 해당 문서 업데이트
+        const docIdToUpdate = querySnapshot.docs[0].id;
+        const docRef = doc(db, "survey", docIdToUpdate);
+        await updateDoc(docRef, dataToSave);
+        finalDocId = docIdToUpdate; // 기존 문서 ID 사용
+        console.log("Document updated with ID: ", docIdToUpdate);
+      } else {
+        // 새 문서 추가
+        const docRef = await addDoc(surveyCollectionRef, dataToSave);
+        finalDocId = docRef.id; // 새로 생성된 문서 ID 사용
+        console.log("Document written with ID: ", docRef.id);
+      }
       
       // 2. SMS 발송
-      // 이름, 전화번호, scoresMap을 포함하여 SMS 발송 훅 호출
-      const smsResult = await sendSmsMessage({ name, phone, scoresMap });
+      // 이름, 전화번호, scoresMap, 그리고 문서 ID를 포함하여 SMS 발송 훅 호출
+      const smsResult = await sendSmsMessage({ name, phone, scoresMap, documentId: finalDocId });
 
       if (smsResult && smsResult.success) {
         alert("상담 신청 및 SMS 발송이 완료되었습니다. 상담사가 곧 연락드릴게요 💕");
@@ -135,7 +157,7 @@ export default function SurveyPage() {
       setEmail('');
       setShowConsultForm(false);
     } catch (error) {
-      console.error("Firestore에 데이터 추가 중 오류 발생:", error);
+      console.error("Firestore에 데이터 추가/업데이트 중 오류 발생:", error);
       alert("상담 신청 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
@@ -151,7 +173,7 @@ export default function SurveyPage() {
 
   return (
     <div className={styles.pageContainer}>
-      <h1 className={styles.title} onClick={fillRandomAnswers}>성적 취향 테스트</h1>
+      <h1 className={styles.title} onClick={fillRandomAnswers}>성적 취향 테스트</h1> {/* 클릭 이벤트로 변경 */}
       <form id="testForm" onSubmit={handleSubmit}>
         <div id="questionContainer">
           {questions.map((q, index) => (
