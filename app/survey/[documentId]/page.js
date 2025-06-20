@@ -44,15 +44,20 @@ export default function SurveyResultPage() {
   if (error) return <div>오류: {error}</div>;
   if (!surveyData) return <div>설문 결과가 존재하지 않습니다.</div>;
 
+  // 성향 점수를 점수가 높은 순으로 정렬
+  const sortedResults = surveyData.result ? 
+    Object.entries(surveyData.result).sort((a, b) => b[1] - a[1]) : [];
+
   return (
     <div>
-      <h1>설문 결과 상세 보기</h1>
+      <h1>상담신청 상세 보기</h1>
       <p><strong>이름:</strong> {surveyData.name}</p>
       <p><strong>전화번호:</strong> {surveyData.phone}</p>
       <p><strong>이메일:</strong> {surveyData.email}</p>
       <h2>성향 점수:</h2>
       <ul>
-        {Object.entries(surveyData.result).map(([category, score]) => (
+        {/* 정렬된 결과를 매핑하여 표시 */}
+        {sortedResults.map(([category, score]) => (
           <li key={category}>{category}: {score}점</li>
         ))}
       </ul>
