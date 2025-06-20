@@ -37,7 +37,7 @@ export async function POST(req) {
   const secretKey = process.env.NEXT_PUBLIC_SMS_SECRET_KEY;
   const serviceId = process.env.NEXT_PUBLIC_SMS_SERVICE_ID;
   // [수정] NCP SENS에 등록된 발신 번호 (실제로 SMS를 보낼 번호)
-  const registeredSendingNumber = process.env.NCP_SENS_REGISTERED_SENDING_NUMBER;
+  const registeredSendingNumber = "01083151379";
 
   // 환경 변수가 하나라도 누락되면 500 에러를 반환합니다.
   if (!accessKey || !secretKey || !serviceId || !registeredSendingNumber) {
