@@ -18,8 +18,11 @@ export default function useSmsMessage() {
    * @param {string} params.name - 신청자 이름
    * @param {string} params.phone - 신청자 전화번호 ('-' 포함 또는 미포함)
    * @param {object} params.scoresMap - 설문조사 결과의 성향별 점수 맵 (예: { "도미넌트": 150, "서브": 120, ... })
+   * @param {string} params.documentId - Firebase Firestore에 저장된 문서 ID
+   * @param {string} [params.surveyType = 'survey'] - 설문지 유형 (예: 'survey' 또는 'survey2'). `customMessage`가 없을 때 링크 생성에 사용됩니다.
+   * @param {string} [params.message] - 직접 정의한 SMS 메시지 내용. 이 파라미터가 있으면 `scoresMap` 기반의 자동 생성 메시지보다 우선합니다.
    */
-  const sendSmsMessage = async ({ name, phone, scoresMap, documentId }) => {
+  const sendSmsMessage = async ({ name, phone, scoresMap, documentId, surveyType = 'survey', message: customMessage }) => {
     setLoading(true);
     setError(null);
     setData(null);
@@ -30,17 +33,27 @@ export default function useSmsMessage() {
       return null;
     }
 
-    // scoresMap에서 상위 5개 항목을 추출하여 메시지 생성
-    const sortedScores = Object.entries(scoresMap || {}) // scoresMap이 없을 경우 대비
-      .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-      .slice(0, 5);
+    let messageContent;
+    // 애플리케이션의 기본 URL을 가져옵니다.
+    // window 객체가 없는 서버 사이드 렌더링 환경을 고려하여 기본 URL을 설정합니다.
+    const appBaseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://you-and-me-three.vercel.app';
+    
+    // customMessage가 파라미터로 제공되면, 해당 메시지를 SMS 내용으로 사용합니다.
+    // 이 경우, `scoresMap` 기반의 자동 메시지 생성 로직은 건너뛰어집니다.
+    if (customMessage) {
+      messageContent = customMessage;
+    } else {
+      // customMessage가 제공되지 않았을 경우, scoresMap과 surveyType에 따라 메시지를 자동으로 생성합니다.
+      const sortedScores = Object.entries(scoresMap || {})
+        .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+        .slice(0, 5);
+      const top5Categories = sortedScores.map(([cat, score]) => `${cat}: ${score}점`).join(', ');
 
-    const top5Categories = sortedScores.map(([cat, score]) => `${cat}: ${score}점`).join(', ');
-
-    // SMS 메시지 내용 구성
-    const messageContent = 
-      `[너랑나 상담 신청]\n` +
-      `https://you-and-me-three.vercel.app/survey/${documentId}\n`;
+      // surveyType에 따라 상세 페이지 링크의 경로를 동적으로 변경합니다.
+      messageContent = 
+        `[너랑나 상담 신청]\n` +
+        `${appBaseUrl}/${surveyType}/${documentId}\n`
+    }
 
     try {
       const response = await fetch('/api/send-sms-message', {
@@ -49,11 +62,8 @@ export default function useSmsMessage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // 'from'은 신청자의 전화번호로, API 라우트에서 메시지 내용에 포함됩니다.
           from: phone,          
-          // 'to'는 상담사의 고정된 번호로, SMS 발송의 실제 수신인이 됩니다.
           to: RECEIVER_PHONE_NUMBER,       
-          // NCP SENS로 보낼 최종 메시지 내용
           message: messageContent,           
         }),
       });
