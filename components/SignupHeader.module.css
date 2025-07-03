@@ -1,0 +1,25 @@
+/* components/SignupHeader.module.css */
+
+.headerContainer {
+  text-align: center;
+  margin-bottom: 30px; /* 아래 콘텐츠와의 간격 */
+  width: 100%;
+}
+
+.headerImage {
+  display: block;
+  margin: 0 auto 20px auto; /* 중앙 정렬 및 아래 텍스트와의 간격 */
+  max-width: 100%;
+  height: auto; /* 이미지 비율 유지 */
+  border-radius: 8px; /* 부드러운 모서리 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.headerTitle {
+  color: #555; /* 이미지 하단 텍스트 색상 */
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0; /* 기본 마진 제거 */
+  padding-bottom: 20px; /* 아래 콘텐츠와의 추가 패딩 */
+  border-bottom: 1px solid #e0e0e0; /* 아래 구분선 */
+}
