@@ -118,20 +118,20 @@ const questionsData = [
 // 추천 제품 정보 (이미지 사용)
 const productRecommendations = {
   secure: [
-    { name: "진정 시트 마스크", image: "/images/mask.jpeg", description: "평온한 당신을 위한 진정 마스크." },
-    { name: "아로마 오일 세트", image: "/images/aroma.jpeg", description: "관계를 더욱 풍요롭게." },
+    { name: "진정 시트 마스크", image: "/images/mask.jpg", description: "평온한 당신을 위한 진정 마스크." },
+    { name: "아로마 오일 세트", image: "/images/aroma.jpg", description: "관계를 더욱 풍요롭게." },
   ],
   anxious: [
-    { name: "안심 릴렉스 티", image: "/images/tea.jpeg", description: "불안한 마음을 다독이는 따뜻한 차." },
-    { name: "긍정 확언 카드", image: "/images/card.jpeg", description: "자존감을 높이는 긍정 메시지." },
+    { name: "안심 릴렉스 티", image: "/images/tea.jpg", description: "불안한 마음을 다독이는 따뜻한 차." },
+    { name: "긍정 확언 카드", image: "/images/card.jpg", description: "자존감을 높이는 긍정 메시지." },
   ],
   avoidant: [
-    { name: "개인 공간 향수", image: "/images/perfume.jpeg", description: "나만의 시간을 위한 아늑한 향." },
-    { name: "독립성 강화 워크북", image: "/images/workbook.jpeg", description: "자유를 존중하는 관계를 위한 가이드." },
+    { name: "개인 공간 향수", image: "/images/perfume.jpg", description: "나만의 시간을 위한 아늑한 향." },
+    { name: "독립성 강화 워크북", image: "/images/workbook.jpg", description: "자유를 존중하는 관계를 위한 가이드." },
   ],
   disorganized: [
-    { name: "감정 일기장", image: "/images/book.jpeg", description: "복잡한 감정을 정리하는 도구." },
-    { name: "경계 설정 가이드북", image: "/images/book.jpeg", description: "건강한 관계를 위한 실용 지침서." },
+    { name: "감정 일기장", image: "/images/book.jpg", description: "복잡한 감정을 정리하는 도구." },
+    { name: "경계 설정 가이드북", image: "/images/book.jpg", description: "건강한 관계를 위한 실용 지침서." },
   ],
 };
 
