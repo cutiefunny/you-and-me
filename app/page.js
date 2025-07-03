@@ -34,39 +34,39 @@ export default function Home() {
   const topFour = [
     {
       name: '김옥순',
-      image: '/images/1women.jpg',
+      image: '/images/girl (1).jpg',
       description: '솔직한 대화를 원하신다면',
     },
     {
       name: '박영자',
-      image: '/images/2women.jpg',
+      image: '/images/girl (2).jpg',
     },
     {
       name: '최영희',
-      image: '/images/3women.jpg',
+      image: '/images/girl (3).jpg',
     },
     {
       name: '정영숙',
-      image: '/images/4women.jpg',
+      image: '/images/girl (4).jpg',
     }
   ];
 
   const persons = [
     {
       name: '김나나',
-      image: '/images/5women.jpg',
+      image: '/images/girl (5).jpg',
     },
     {
       name: '이라라',
-      image: '/images/6women.jpg',
+      image: '/images/girl (6).jpg',
     },
     {
       name: '최니니',
-      image: '/images/7women.jpg',
+      image: '/images/girl (7).jpg',
     },
     {
       name: '정영숙', // topFour에도 있는 분이네요, 데이터 확인 필요
-      image: '/images/4women.jpg',
+      image: '/images/girl (8).jpg',
     }
   ];
   

@@ -13,7 +13,7 @@ const initialDummyData = [
   // General List (4위부터)
   { rank: 4, name: '김나나', image: '/images/5women.jpg', stat: 'l25', isVerified: true, score: 13500 }, // 이미지 없음 예시
   { rank: 5, name: '이라라', image: '/images/6women.jpg', country: '대한민국', stat: 'l20', isVerified: true, score: 13000 },
-  { rank: 6, name: '최니니', image: '/images/7women.jpg', country: '대한민국', stat: 'l23', isVerified: true, score: 12500 },
+  { rank: 6, name: '최니니', image: '/images/girl (7).jpg', country: '대한민국', stat: 'l23', isVerified: true, score: 12500 },
   { rank: 7, name: '정영숙', image: '/images/4women.jpg', country: '대한민국', stat: 'l34', isVerified: false, score: 12000 }, // 미인증 예시
 ];
 

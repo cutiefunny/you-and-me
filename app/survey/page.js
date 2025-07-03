@@ -19,7 +19,7 @@ const partners = {
   "도미넌트": { text: "모임에서 만난 리버스 스위치 타입", image: "/images/survey_dominant_partner.jpeg" },
   "서브": { text: "학교에서 만난 바닐라 타입", image: "/images/survey_sub_partner.jpeg" },
   "스팽키": { text: "클럽에서 만난 페티시형 상대", image: "/images/survey_spanky_partner.jpeg" },
-  "헌터": { text: "게임에서 만난 탐색가형 타입", image: "/images/7women.jpg" },
+  "헌터": { text: "게임에서 만난 탐색가형 타입", image: "/images/girl (7).jpg" },
   "리틀": { text: "오래된 친구 타입", "image": "/images/survey_little_partner.jpeg" },
   "브랫": { text: "SNS에서 만난 도발적인 상대", image: "/images/survey_brat_partner.jpeg" },
   "바닐라": { text: "조용한 도서관에서 만난 순수한 상대", image: "/images/survey_hunter_partner.jpeg" }
