@@ -10,7 +10,7 @@ export default function ClientLayoutWrapper({ children }) {
   const pathname = usePathname();
 
   // /survey 경로일 경우 헤더와 푸터를 숨깁니다.
-  const hideHeaderAndFooter = pathname === '/survey' || pathname.startsWith('/survey2');
+  const hideHeaderAndFooter = pathname === '/survey' || pathname.startsWith('/survey2') || pathname.startsWith('/admin');
   // /signup 경로일 경우 헤더와 푸터를 숨기지 않지만, Suspense로 감쌉니다.
   const isSignupPage = pathname === '/signup';
 
