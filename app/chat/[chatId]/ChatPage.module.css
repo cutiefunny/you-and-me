@@ -1,72 +1,143 @@
+/* ========================
+ * 1. 전체 레이아웃
+ * ======================== */
+
 .chatContainer {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 100px); /* 헤더/푸터 높이를 제외한 전체 높이 */
+    height: calc(100vh - 80px); /* 헤더 등을 제외한 높이, 필요시 조정 */
     max-width: 800px;
     margin: 0 auto;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     overflow: hidden;
-}
-
-.messagesContainer {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
     background-color: #f9f9f9;
 }
 
+/* ========================
+ * 2. 메시지 목록
+ * ======================== */
+
+.messagesContainer {
+    flex: 1; /* 남은 공간을 모두 차지 */
+    padding: 20px;
+    overflow-y: auto; /* 메시지가 많아지면 스크롤 생성 */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 메시지 간의 세로 간격 */
+}
+
+/* 메시지 한 줄 (프로필 이미지 + 말풍선)을 감싸는 컨테이너 */
+.messageRow {
+    display: flex;
+    align-items: flex-end; /* 메시지가 길어질 경우 이미지가 하단에 정렬되도록 */
+    gap: 10px; /* 이미지와 말풍선 사이 간격 */
+    max-width: 85%;
+}
+
+/* 받은 메시지 행 (왼쪽 정렬) */
+.receivedRow {
+    align-self: flex-start;
+}
+
+/* 보낸 메시지 행 (오른쪽 정렬) */
+.sentRow {
+    align-self: flex-end;
+    flex-direction: row-reverse; /* 보낸 메시지는 말풍선이 이미지보다 왼쪽에 오도록 */
+}
+
+/* ========================
+ * 3. 프로필 이미지
+ * ======================== */
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* 원형으로 만듦 */
+    object-fit: cover; /* 이미지가 찌그러지지 않도록 */
+    flex-shrink: 0; /* 컨테이너가 줄어들어도 이미지 크기 유지 */
+    border: 1px solid #eee;
+}
+
+/* ========================
+ * 4. 메시지 말풍선
+ * ======================== */
+
+/* 메시지 말풍선 기본 스타일 */
 .message {
     padding: 10px 15px;
     border-radius: 20px;
-    max-width: 70%;
     word-wrap: break-word;
-}
-
-.sent {
-    background-color: #DCF8C6;
-    align-self: flex-end;
-    text-align: right;
-}
-
-.received {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    align-self: flex-start;
-    text-align: left;
 }
 
 .message p {
     margin: 0;
+    line-height: 1.5;
 }
+
+/* 보낸 메시지 말풍선 (오른쪽) */
+.sent {
+    background-color: #DCF8C6; /* 연두색 배경 */
+    color: #333;
+    border-top-right-radius: 8px; /* 꼬리 모양 효과 */
+}
+
+/* 받은 메시지 말풍선 (왼쪽) */
+.received {
+    background-color: #ffffff; /* 흰색 배경 */
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-top-left-radius: 8px; /* 꼬리 모양 효과 */
+}
+
+/* ========================
+ * 5. 메시지 입력 폼
+ * ======================== */
 
 .inputForm {
     display: flex;
     padding: 10px;
     border-top: 1px solid #e0e0e0;
     background-color: #fff;
+    gap: 10px;
 }
 
 .input {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 20px;
-    margin-right: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    border-color: #007bff;
+}
+
+.input:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
 }
 
 .sendButton {
-    padding: 10px 20px;
+    padding: 12px 25px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 20px;
     cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }
 
 .sendButton:hover {
     background-color: #0056b3;
+}
+
+.sendButton:disabled {
+    background-color: #a0cffc;
+    cursor: not-allowed;
 }

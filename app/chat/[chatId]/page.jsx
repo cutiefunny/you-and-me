@@ -1,57 +1,74 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
-// 1. next/navigation에서 useParams를 import 합니다.
-import { useParams } from 'next/navigation';
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../../lib/firebase/clientApp';
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image'; // 1. Next.js의 Image 컴포넌트를 import 합니다.
+import { useParams, useSearchParams } from 'next/navigation'; 
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc } from 'firebase/firestore';
+import { db, auth } from '../../../lib/firebase/clientApp';
+import { onAuthStateChanged } from 'firebase/auth';
 import styles from './ChatPage.module.css';
 
-// 2. 컴포넌트의 인자에서 params를 제거합니다.
 export default function ChatPage() {
-    // 3. useParams 훅을 호출하여 params 객체를 가져옵니다.
     const params = useParams();
-    const { chatId } = params; // chatId를 정상적으로 추출할 수 있습니다.
+    const searchParams = useSearchParams();
+    const { chatId } = params;
 
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [senderId, setSenderId] = useState(null);
     const messagesEndRef = useRef(null);
 
-    // chatId가 변경될 때마다 Firestore에서 메시지를 실시간으로 가져옵니다.
+    // senderId 결정 로직 (이전과 동일)
+    useEffect(() => {
+        const isAdmin = searchParams.get('isAdmin') === 'true';
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (isAdmin) {
+                setSenderId('manager');
+            } else if (user) {
+                setSenderId(user.uid);
+            } else {
+                setSenderId(null);
+            }
+        });
+        return () => unsubscribe();
+    }, [searchParams]);
+
+    // 메시지 로드 및 스크롤 로직 (이전과 동일)
     useEffect(() => {
         if (!chatId) return;
-
         const messagesRef = collection(db, 'chats', chatId, 'messages');
         const q = query(messagesRef, orderBy('timestamp', 'asc'));
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const msgs = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const msgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setMessages(msgs);
         });
-
         return () => unsubscribe();
     }, [chatId]);
 
-    // 메시지가 추가될 때마다 스크롤을 맨 아래로 이동합니다.
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
-
-    // 메시지 전송 핸들러
+    
+    // 메시지 전송 로직 (이전과 동일)
     const handleSendMessage = async (e) => {
         e.preventDefault();
-        if (newMessage.trim() === '') return;
+        if (!senderId || newMessage.trim() === '') return;
 
-        const messagesRef = collection(db, 'chats', chatId, 'messages');
-        await addDoc(messagesRef, {
+        const chatDocRef = doc(db, 'chats', chatId);
+        const messagesRef = collection(chatDocRef, 'messages');
+
+        const messageData = {
             text: newMessage,
             timestamp: serverTimestamp(),
-            // 실제 앱에서는 현재 로그인한 사용자 정보를 저장해야 합니다.
-            senderId: 'user1' 
-        });
+            senderId: senderId,
+            isAdmin: senderId === 'manager'
+        };
+
+        await addDoc(messagesRef, messageData);
+        await setDoc(chatDocRef, {
+            lastMessage: newMessage,
+            updatedAt: serverTimestamp()
+        }, { merge: true });
 
         setNewMessage('');
     };
@@ -59,11 +76,33 @@ export default function ChatPage() {
     return (
         <div className={styles.chatContainer}>
             <div className={styles.messagesContainer}>
-                {messages.map(msg => (
-                    <div key={msg.id} className={`${styles.message} ${msg.senderId === 'user1' ? styles.sent : styles.received}`}>
-                        <p>{msg.text}</p>
-                    </div>
-                ))}
+                {messages.map(msg => {
+                    // 2. 현재 보는 사람이 보낸 메시지인지(isSent) 확인합니다.
+                    const isSentByMe = msg.senderId === senderId;
+
+                    return (
+                        // 3. 메시지 한 줄을 감싸는 컨테이너를 추가하고, 보낸 사람에 따라 스타일을 지정합니다.
+                        <div key={msg.id} className={`${styles.messageRow} ${isSentByMe ? styles.sentRow : styles.receivedRow}`}>
+                            
+                            {/* 4. 내가 받음 메시지일 경우에만 프로필 이미지를 표시합니다. */}
+                            {!isSentByMe && (
+                                <Image
+                                    // 관리자 메시지이면 manager 프로필, 아니면 기본 사용자 프로필을 보여줍니다.
+                                    src={msg.isAdmin ? '/images/manager-profile.jpg' : '/images/default-user.jpg'}
+                                    alt="Profile"
+                                    width={40}
+                                    height={40}
+                                    className={styles.profileImage}
+                                />
+                            )}
+                            
+                            {/* 5. 메시지 말풍선 */}
+                            <div className={`${styles.message} ${isSentByMe ? styles.sent : styles.received}`}>
+                                <p>{msg.text}</p>
+                            </div>
+                        </div>
+                    );
+                })}
                 <div ref={messagesEndRef} />
             </div>
             <form onSubmit={handleSendMessage} className={styles.inputForm}>
@@ -73,8 +112,11 @@ export default function ChatPage() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="메시지를 입력하세요..."
                     className={styles.input}
+                    disabled={!senderId} 
                 />
-                <button type="submit" className={styles.sendButton}>전송</button>
+                <button type="submit" className={styles.sendButton} disabled={!senderId}>
+                    전송
+                </button>
             </form>
         </div>
     );
