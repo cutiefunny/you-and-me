@@ -1,0 +1,72 @@
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px); /* 헤더/푸터 높이를 제외한 전체 높이 */
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.messagesContainer {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f9f9f9;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 20px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.sent {
+    background-color: #DCF8C6;
+    align-self: flex-end;
+    text-align: right;
+}
+
+.received {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    align-self: flex-start;
+    text-align: left;
+}
+
+.message p {
+    margin: 0;
+}
+
+.inputForm {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #e0e0e0;
+    background-color: #fff;
+}
+
+.input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.sendButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.sendButton:hover {
+    background-color: #0056b3;
+}

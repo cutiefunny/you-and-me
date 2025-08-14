@@ -1,84 +1,98 @@
-/* components/FixedMenu.module.css */
+/* ===== 기본 스타일 (모바일 우선) ===== */
 .fixedMenuContainer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  background-color: #D1C4E9; /* 보라색 파스텔톤 */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  display: flex;
-  justify-content: center; /* 내부 .menuContentWrapper를 중앙 정렬 */
-  padding: 0 24px;
-  box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+    z-index: 1000;
+    /* padding: 0 1rem; */
 }
 
 .menuContentWrapper {
-  width: 100%;
-  max-width: 1280px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  position: relative; /* 이전에는 titleLink의 absolute 기준이었으나, 이제는 필수는 아님 */
-  justify-content: space-between; /* <<--- 변경: 좌측(타이틀), 우측(별풍선+아이콘) 배치 */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    height: 60px;
+    position: relative;
+    padding: 0 1rem;
 }
 
 .titleLink {
-  text-decoration: none;
-  color: inherit;
-  /* --- absolute 포지셔닝 제거 --- */
-  /* position: absolute; */
-  /* left: 50%; */
-  /* top: 50%; */
-  /* transform: translate(-50%, -50%); */
-  display: flex; /* 로고 이미지 등을 함께 배치할 경우 유용 */
-  align-items: center;
+    text-decoration: none;
+    color: inherit;
 }
 
 .titleText {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #FFFFFF; /* 흰색 글자 */
-  margin: 0;
-  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
 }
 
-/* 별풍선 개수와 설정 아이콘을 묶는 컨테이너 */
 .rightSection {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* 별풍선 텍스트와 설정 아이콘 사이 간격 */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
 }
 
+/* 모바일에서는 공간 확보를 위해 텍스트 숨김 */
 .starBalloonCountText {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #ffffff;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
-  white-space: nowrap;
+    display: none;
 }
 
 .settingsIconWrapper {
-  /* 특별한 추가 스타일 없을 수 있음 */
+    display: flex;
+    align-items: center;
 }
 
 .settingsButton {
-  background: none;
-  border: none;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
-.settingsButton span[role="img"] {
-  font-size: 1.5rem;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+.loginButton {
+    background-color: #f61bfd;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }
 
-.settingsButton:hover {
-  opacity: 0.8;
+.loginButton:hover {
+    background-color: #aa1aaa;
+}
+
+
+@media (min-width: 768px) {
+    .titleLink {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-shrink: 0;
+    }
+
+    .titleText {
+        font-size: 1.5rem;
+    }
+
+    .starBalloonCountText {
+        display: inline;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .loginButton {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
 }
