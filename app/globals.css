@@ -1,64 +1,12 @@
-/* globals.css */
-html,
-body {
-  height: 100%; /* html과 body가 전체 높이를 차지하도록 */
-  margin: 0;
-  padding: 0;
+body { font-family: 'Pretendard', sans-serif; }
+/* 고급 그라데이션 버튼 (보라 ↔ 하늘색) */
+.btn-gradient{
+  background-image: linear-gradient(135deg,#6D28D9 0%,#7C3AED 36%,#38BDF8 100%);
+  color:#fff; transition:filter .2s ease, transform .2s ease;
+  box-shadow:0 8px 20px rgba(109,40,217,.25);
 }
-
-/* body에 직접 flex 레이아웃 적용 */
-.siteLayout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* 뷰포트 전체 높이를 최소 높이로 가짐 */
-}
-
-/* FixedMenu와 main 컨텐츠를 묶는 wrapper (선택적) */
-/* 이 wrapper가 없어도 mainContent에 flex-grow를 주면 됩니다. */
-.siteContentWrapper {
-  flex-grow: 1; /* 이 부분이 늘어나면서 Footer를 아래로 밀어냄 */
-  display: flex; /* 내부 FixedMenu와 mainContent를 수직으로 쌓기 위해 (선택적) */
-  flex-direction: column;
-}
-
-.mainContent {
-  flex-grow: 1; /* FixedMenu를 제외한 나머지 공간을 채움 */
-  /* paddingTop은 RootLayout에서 인라인으로 설정됨 */
-  /* 여기에 페이지 공통 좌우 패딩 등을 설정할 수 있습니다. */
-  /* 예: padding-left: 24px; padding-right: 24px; */
-  padding-top : 60px; /* FixedMenu 높이만큼 여백 추가 */
-  background-color: #efe8ff;
-}
-
-/* Footer 자체의 스타일은 Footer.module.css에서 관리 */
-/* Footer 컴포넌트는 siteLayout flex 컨테이너의 마지막 아이템으로 자연스럽게 하단에 위치 */
-
-.swiper-button-next,
-.swiper-button-prev {
-  color: #ffffff !important; /* !important는 다른 스타일에 덮어씌워지지 않도록 필요할 때만 */
-  background-color: rgba(0, 0, 0, 0.3) !important;
-  width: 30px !important;
-  height: 30px !important;
-  border-radius: 50% !important;
-}
-.swiper-button-next::after,
-.swiper-button-prev::after {
-  font-size: 16px !important;
-  font-weight: bold !important;
-}
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-  background-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Swiper Pagination Overrides */
-.swiper-pagination-bullet {
-  background-color: rgba(255, 255, 255, 0.7) !important;
-  opacity: 1 !important;
-  width: 10px !important;
-  height: 10px !important;
-}
-
-.swiper-pagination-bullet-active {
-  background-color: #ffffff !important;
-}
+.btn-gradient:hover{ filter:brightness(1.05); transform:translateY(-1px); }
+.btn-gradient:active{ transform:translateY(0); }
+/* 반응형 유튜브 */
+.video-wrap{ position:relative; width:100%; padding-top:56.25%; }
+.video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:16px; }
