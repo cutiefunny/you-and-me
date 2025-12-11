@@ -14,7 +14,7 @@
     "agora-token": "^2.0.5",
     "crypto-js": "^4.2.0",
     "firebase": "^11.9.1",
-    "next": "15.3.3",
+    "next": "15.3.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "swiper": "^11.2.8",
